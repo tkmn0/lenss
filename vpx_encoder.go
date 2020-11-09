@@ -1,6 +1,5 @@
 package lenss
 
-import "C"
 import (
 	"fmt"
 	"unsafe"
