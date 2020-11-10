@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"unsafe"
 
 	"github.com/tkmn0/lenss"
 	ivfwriter "github.com/tkmn0/lenss/examples/util/ivf_writer"
@@ -26,13 +25,17 @@ func main() {
 	fmt.Println("key frame interval:", *key_frame_interval)
 	fmt.Println("frame count:", *frames)
 
-	infile := lenss.OpenFile(*infile_path, "rb")
-	defer lenss.CloseFile(infile)
+	infile, err := os.Open(*infile_path)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer infile.Close()
 
 	enc, err := lenss.NewEncoder(lenss.CodecVP8, *video_width, *video_height, 30, 200, *key_frame_interval)
 	if err != nil {
 		panic(err.Error())
 	}
+	enc.Process()
 
 	ivf, err := ivfwriter.New(*outfile_path)
 	if err != nil {
@@ -48,7 +51,16 @@ func main() {
 		}
 	}()
 
-	enc.ProcessFromFile(unsafe.Pointer(infile))
+	go func() {
+		for {
+			buf := make([]byte, enc.FrameSizeYuv())
+			_, err := infile.Read(buf)
+			if err != nil {
+				break
+			}
+			enc.Input <- buf
+		}
+	}()
 
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
 }

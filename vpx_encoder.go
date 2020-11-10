@@ -2,7 +2,6 @@ package lenss
 
 import (
 	"fmt"
-	"unsafe"
 
 	"github.com/tkmn0/lenss/vpx"
 )
@@ -67,10 +66,16 @@ func NewEncoder(codec VCodec, width int, height int, fps int, bitrate int, keyfr
 	return enc, nil
 }
 
-func (e *VpxEncoder) ProcessFromFile(file unsafe.Pointer) {
+func (e *VpxEncoder) FrameSizeYuv() int {
+	return vpx.VpxFrameSize(&e.img)
+}
+
+func (e *VpxEncoder) Process() {
 	go func() {
-		result := vpx.VpxImageReadFromFile(&e.img, file)
-		for result != 0 {
+		for {
+			yuv := <-e.Input
+			vpx.VpxImageRead(&e.img, yuv)
+
 			var flags vpx.EncFrameFlags
 			var iter *vpx.CodecIter
 
@@ -97,8 +102,6 @@ func (e *VpxEncoder) ProcessFromFile(file unsafe.Pointer) {
 					break
 				}
 			}
-
-			result = vpx.VpxImageReadFromFile(&e.img, file)
 		}
 	}()
 }

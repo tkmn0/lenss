@@ -45,27 +45,8 @@ vpx_img_write(const vpx_image_t *img, FILE *file) {
   }
 }
 
-// int
-// vpx_img_read(vpx_image_t *img, void *bs) {
-//   int plane;
-//   for (plane = 0; plane < 3; ++plane) {
-//     unsigned char *buf = img->planes[plane];
-//     const int stride = img->stride[plane];
-//     const int w = vpx_img_plane_width(img, plane) *
-//                   ((img->fmt & VPX_IMG_FMT_HIGHBITDEPTH) ? 2 : 1);
-//     const int h = vpx_img_plane_height(img, plane);
-//     int y;
-//     for (y = 0; y < h; ++y) {
-//       memcpy(buf, bs, w);
-//       buf += stride;
-//       bs += w;
-//     }
-//   }
-//   return 1;
-// }
-
 int
-vpx_img_read_from_file(vpx_image_t *img, FILE *file) {
+vpx_img_read(vpx_image_t *img, void *bs) {
   int plane;
 
   for (plane = 0; plane < 3; ++plane) {
@@ -75,14 +56,23 @@ vpx_img_read_from_file(vpx_image_t *img, FILE *file) {
                   ((img->fmt & VPX_IMG_FMT_HIGHBITDEPTH) ? 2 : 1);
     const int h = vpx_img_plane_height(img, plane);
     int y;
-
     for (y = 0; y < h; ++y) {
-      if (fread(buf, 1, w, file) != (size_t)w) return 0;
+      memcpy(buf, bs, w);
       buf += stride;
+      bs += w;
     }
   }
-
   return 1;
+}
+
+int
+vpx_image_height(vpx_image_t *img, int plane) {
+  return vpx_img_plane_height(img, plane);
+}
+
+int
+vpx_image_stride(vpx_image_t *img, int plane){
+  return img->stride[plane];
 }
 
 typedef struct Bytes {
@@ -102,14 +92,18 @@ import (
 	"unsafe"
 )
 
-// func VpxImageRead(img *Image, yuv []byte) {
-// 	// cimg, cimgAllocMap := img.PassRef()
-// 	// runtime.KeepAlive(cimgAllocMap)
-// 	// C.vpx_img_read(cimg, unsafe.Pointer(&yuv[0]))
-// }
+func VpxImageRead(img *Image, yuv []byte) {
+	C.vpx_img_read(img.refc09455e3, unsafe.Pointer(&yuv[0]))
+}
 
-func VpxImageReadFromFile(img *Image, file unsafe.Pointer) int {
-	return int(C.vpx_img_read_from_file(img.refc09455e3, (*C.FILE)(file)))
+func VpxFrameSize(img *Image) int {
+	frame := 0
+	for plane := 0; plane < 3; plane++ {
+		h := int(C.vpx_image_height(img.refc09455e3, C.int(plane)))
+		s := int(C.vpx_image_stride(img.refc09455e3, C.int(plane)))
+		frame += h * s
+	}
+	return frame
 }
 
 func VpxGetBufferFromPkt(pkt *CodecCxPkt) []byte {
