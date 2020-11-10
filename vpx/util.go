@@ -108,7 +108,7 @@ func VpxImageRead(img *Image, yuv []byte) {
 	C.vpx_img_read(img.refc09455e3, unsafe.Pointer(&yuv[0]))
 }
 
-func VpxPlaneBuffer(img *Image) []byte {
+func (img *Image) VpxPlaneBuffer() []byte {
 	buffer := []byte{}
 	for i := 0; i < 3; i++ {
 		h := int(C.vpx_image_height(img.refc09455e3, C.int(i)))
