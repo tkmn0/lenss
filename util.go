@@ -38,6 +38,6 @@ func FrameSize(img *Image) int {
 	return vpx.VpxFrameSize((*vpx.Image)(img))
 }
 
-func PlaneBuffer(img *Image) [][]byte {
+func YuvPlaneBuffer(img *Image) []byte {
 	return vpx.VpxPlaneBuffer((*vpx.Image)(img))
 }

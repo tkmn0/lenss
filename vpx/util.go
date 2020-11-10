@@ -108,15 +108,15 @@ func VpxImageRead(img *Image, yuv []byte) {
 	C.vpx_img_read(img.refc09455e3, unsafe.Pointer(&yuv[0]))
 }
 
-func VpxPlaneBuffer(img *Image) [][]byte {
-	buffer := [][]byte{}
+func VpxPlaneBuffer(img *Image) []byte {
+	buffer := []byte{}
 	for i := 0; i < 3; i++ {
 		h := int(C.vpx_image_height(img.refc09455e3, C.int(i)))
 
 		for y := 0; y < h; y++ {
 			data := C.vpx_plane_buffer(img.refc09455e3, C.int(i), C.int(y))
 			if data.bs != nil {
-				buffer = append(buffer, C.GoBytes(data.bs, data.size))
+				buffer = append(buffer, C.GoBytes(data.bs, data.size)...)
 			}
 		}
 	}

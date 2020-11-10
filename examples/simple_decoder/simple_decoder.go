@@ -36,10 +36,8 @@ func main() {
 		fmt.Println("writing to raw file...")
 		for {
 			decoded := <-dec.Output
-			buffs := lenss.PlaneBuffer(decoded)
-			for _, buff := range buffs {
-				outfile.Write(buff)
-			}
+			buff := lenss.YuvPlaneBuffer(decoded)
+			outfile.Write(buff)
 			fmt.Printf(".")
 		}
 	}()
