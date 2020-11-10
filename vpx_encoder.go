@@ -1,8 +1,6 @@
 package lenss
 
 import (
-	"fmt"
-
 	"github.com/tkmn0/lenss/vpx"
 )
 
@@ -85,7 +83,6 @@ func (e *VpxEncoder) Process() {
 
 			err := vpx.Error(vpx.CodecEncode(e.ctx, &e.img, vpx.CodecPts(e.frameCount), 1, flags, vpx.DlRealtime))
 			if err != nil {
-				fmt.Println("encode error:", err.Error())
 				return
 			}
 			e.frameCount++

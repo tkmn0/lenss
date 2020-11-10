@@ -1,8 +1,6 @@
 package lenss
 
 import (
-	"fmt"
-
 	"github.com/tkmn0/lenss/vpx"
 )
 
@@ -45,7 +43,6 @@ func (v *VpxDecoder) Process() {
 
 			err := vpx.Error(vpx.CodecDecode(v.ctx, string(src), dataSize, nil, vpx.DlRealtime))
 			if err != nil {
-				fmt.Println("error to decode:", err.Error())
 				return
 			}
 
