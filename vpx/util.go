@@ -6,9 +6,8 @@ package vpx
 #include <vpx/vpx_decoder.h>
 #include <vpx/vp8.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <string.h>
 
 int
 vpx_img_plane_width(const vpx_image_t *img, int plane) {
@@ -24,25 +23,6 @@ vpx_img_plane_height(const vpx_image_t *img, int plane) {
     return (img->d_h + 1) >> img->y_chroma_shift;
   else
     return img->d_h;
-}
-
-void
-vpx_img_write(const vpx_image_t *img, FILE *file) {
-  int plane;
-
-  for (plane = 0; plane < 3; ++plane) {
-    const unsigned char *buf = img->planes[plane];
-    const int stride = img->stride[plane];
-    const int w = vpx_img_plane_width(img, plane) *
-                  ((img->fmt & VPX_IMG_FMT_HIGHBITDEPTH) ? 2 : 1);
-    const int h = vpx_img_plane_height(img, plane);
-    int y;
-
-    for (y = 0; y < h; ++y) {
-      fwrite(buf, 1, w, file);
-      buf += stride;
-    }
-  }
 }
 
 int
@@ -140,8 +120,4 @@ func VpxGetBufferFromPkt(pkt *CodecCxPkt) []byte {
 		return nil
 	}
 	return C.GoBytes(data.bs, data.size)
-}
-
-func VpxImageWrite(img *Image, file unsafe.Pointer) {
-	C.vpx_img_write(img.refc09455e3, (*C.FILE)(file))
 }

@@ -7,7 +7,6 @@ package lenss
 import "C"
 import (
 	"image"
-	"unsafe"
 
 	"github.com/tkmn0/lenss/vpx"
 )
@@ -20,10 +19,6 @@ func OpenFile(filePath string, mode string) *File {
 
 func CloseFile(file *File) {
 	C.fclose((*C.FILE)(file))
-}
-
-func WriteVpxImage(img *Image, file *File) {
-	vpx.VpxImageWrite((*vpx.Image)(img), unsafe.Pointer(file))
 }
 
 func (img *Image) ImageRGBA() *image.RGBA {
