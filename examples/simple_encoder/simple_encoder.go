@@ -53,7 +53,7 @@ func main() {
 
 	go func() {
 		for {
-			buf := make([]byte, enc.FrameSizeYuv())
+			buf := make([]byte, lenss.FrameSize(enc.Image()))
 			_, err := infile.Read(buf)
 			if err != nil {
 				break

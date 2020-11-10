@@ -33,3 +33,7 @@ func (img *Image) ImageRGBA() *image.RGBA {
 func (img *Image) ImageYCbCr() *image.YCbCr {
 	return (*vpx.Image)(img).ImageYCbCr()
 }
+
+func FrameSize(img *Image) int {
+	return vpx.VpxFrameSize((*vpx.Image)(img))
+}

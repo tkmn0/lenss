@@ -66,9 +66,13 @@ func NewEncoder(codec VCodec, width int, height int, fps int, bitrate int, keyfr
 	return enc, nil
 }
 
-func (e *VpxEncoder) FrameSizeYuv() int {
-	return vpx.VpxFrameSize(&e.img)
+func (e *VpxEncoder) Image() *Image {
+	return (*Image)(&e.img)
 }
+
+// func (e *VpxEncoder) FrameSizeYuv() int {
+// 	return vpx.VpxFrameSize(&e.img)
+// }
 
 func (e *VpxEncoder) Process() {
 	go func() {
