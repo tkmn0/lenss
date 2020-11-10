@@ -70,15 +70,11 @@ func (e *VpxEncoder) Image() *Image {
 	return (*Image)(&e.img)
 }
 
-// func (e *VpxEncoder) FrameSizeYuv() int {
-// 	return vpx.VpxFrameSize(&e.img)
-// }
-
 func (e *VpxEncoder) Process() {
 	go func() {
 		for {
 			yuv := <-e.Input
-			vpx.VpxImageRead(&e.img, yuv)
+			(&e.img).VpxImageRead(yuv)
 
 			var flags vpx.EncFrameFlags
 			var iter *vpx.CodecIter

@@ -84,7 +84,7 @@ import (
 	"unsafe"
 )
 
-func VpxImageRead(img *Image, yuv []byte) {
+func (img *Image) VpxImageRead(yuv []byte) {
 	C.vpx_img_read(img.refc09455e3, unsafe.Pointer(&yuv[0]))
 }
 
