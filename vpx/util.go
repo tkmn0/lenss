@@ -86,6 +86,18 @@ BytesType read_frame_data(vpx_codec_cx_pkt_t *pkt) {
 	bytes.size = pkt->data.frame.sz;
   return bytes;
 }
+
+BytesType vpx_plane_buffer(vpx_image_t *img, int plane, int h){
+  BytesType bytes = {NULL, 0};
+  unsigned char *buf = img->planes[plane];
+  const int stride = img->stride[plane];
+  const int w = vpx_img_plane_width(img, plane) *
+                  ((img->fmt & VPX_IMG_FMT_HIGHBITDEPTH) ? 2 : 1);
+  buf += stride * h;
+  bytes.bs = buf;
+  bytes.size = w;
+  return bytes;
+}
 */
 import "C"
 import (
@@ -94,6 +106,22 @@ import (
 
 func VpxImageRead(img *Image, yuv []byte) {
 	C.vpx_img_read(img.refc09455e3, unsafe.Pointer(&yuv[0]))
+}
+
+func VpxPlaneBuffer(img *Image) [][]byte {
+	buffer := [][]byte{}
+	for i := 0; i < 3; i++ {
+		h := int(C.vpx_image_height(img.refc09455e3, C.int(i)))
+
+		for y := 0; y < h; y++ {
+			data := C.vpx_plane_buffer(img.refc09455e3, C.int(i), C.int(y))
+			if data.bs != nil {
+				buffer = append(buffer, C.GoBytes(data.bs, data.size))
+			}
+		}
+	}
+
+	return buffer
 }
 
 func VpxFrameSize(img *Image) int {
