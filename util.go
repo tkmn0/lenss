@@ -29,8 +29,8 @@ func (img *Image) ImageYCbCr() *image.YCbCr {
 	return (*vpx.Image)(img).ImageYCbCr()
 }
 
-func FrameSize(img *Image) int {
-	return vpx.VpxFrameSize((*vpx.Image)(img))
+func (i *Image) FrameSize() int {
+	return ((*vpx.Image)(i)).VpxFrameSize()
 }
 
 func (i *Image) YuvPlaneBuffer() []byte {

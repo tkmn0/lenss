@@ -104,7 +104,7 @@ func (img *Image) VpxPlaneBuffer() []byte {
 	return buffer
 }
 
-func VpxFrameSize(img *Image) int {
+func (img *Image) VpxFrameSize() int {
 	frame := 0
 	for plane := 0; plane < 3; plane++ {
 		h := int(C.vpx_image_height(img.refc09455e3, C.int(plane)))
