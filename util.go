@@ -6,12 +6,12 @@ import (
 	"github.com/tkmn0/lenss/vpx"
 )
 
-func (img *Image) ImageRGBA() *image.RGBA {
-	return (*vpx.Image)(img).ImageRGBA()
+func (i *Image) ImageRGBA() *image.RGBA {
+	return (*vpx.Image)(i).ImageRGBA()
 }
 
-func (img *Image) ImageYCbCr() *image.YCbCr {
-	return (*vpx.Image)(img).ImageYCbCr()
+func (i *Image) ImageYCbCr() *image.YCbCr {
+	return (*vpx.Image)(i).ImageYCbCr()
 }
 
 func (i *Image) FrameSize() int {
