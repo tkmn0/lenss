@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"time"
 
 	"github.com/tkmn0/lenss"
 	ivfreader "github.com/tkmn0/lenss/examples/util/ivf_reader"
@@ -21,7 +20,7 @@ func main() {
 	defer infile.Close()
 	defer outfile.Close()
 
-	ivf, header, err := ivfreader.NewWith(infile)
+	ivf, _, err := ivfreader.NewWith(infile)
 	if err != nil {
 		fmt.Println("ivf error:", err.Error())
 	}
@@ -41,7 +40,6 @@ func main() {
 		}
 	}()
 
-	sleepTime := time.Millisecond * time.Duration((float32(header.TimebaseNumerator)/float32(header.TimebaseDenominator))*1000)
 	for {
 		frame, _, err := ivf.ParseNextFrame()
 		if err != nil {
@@ -52,7 +50,6 @@ func main() {
 			}
 			break
 		}
-		time.Sleep(sleepTime)
 		dec.Srouce <- frame
 	}
 
