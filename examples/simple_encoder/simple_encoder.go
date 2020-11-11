@@ -31,7 +31,7 @@ func main() {
 	}
 	defer infile.Close()
 
-	enc, err := lenss.NewEncoder(lenss.CodecVP8, *video_width, *video_height, 30, 200, *key_frame_interval)
+	enc, err := lenss.NewVpxEncoder(lenss.CodecVP8, *video_width, *video_height, 30, 200, *key_frame_interval)
 	if err != nil {
 		panic(err.Error())
 	}
