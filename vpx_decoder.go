@@ -7,14 +7,14 @@ import (
 type VpxDecoder struct {
 	ctx    *vpx.CodecCtx
 	iface  *vpx.CodecIface
-	Srouce chan []byte
+	Input  chan []byte
 	Output chan *Image
 }
 
 func NewVpxDecoder(codec VCodec) (*VpxDecoder, error) {
 	dec := &VpxDecoder{
 		ctx:    vpx.NewCodecCtx(),
-		Srouce: make(chan []byte),
+		Input:  make(chan []byte),
 		Output: make(chan *Image),
 	}
 	switch codec {
@@ -35,7 +35,7 @@ func NewVpxDecoder(codec VCodec) (*VpxDecoder, error) {
 func (v *VpxDecoder) Process() {
 	go func() {
 		for {
-			src := <-v.Srouce
+			src := <-v.Input
 			dataSize := uint32(len(src))
 			if len(src) <= 0 {
 				return

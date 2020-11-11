@@ -50,7 +50,7 @@ func main() {
 			}
 			break
 		}
-		dec.Srouce <- frame
+		dec.Input <- frame
 	}
 
 }
