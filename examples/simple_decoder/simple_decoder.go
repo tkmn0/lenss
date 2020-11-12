@@ -35,7 +35,7 @@ func main() {
 		fmt.Println("writing to raw file...")
 		for {
 			decoded := <-dec.Output
-			outfile.Write(decoded.YuvPlaneBuffer())
+			outfile.Write(decoded.YuvBuffer())
 			fmt.Printf(".")
 		}
 	}()
@@ -50,7 +50,7 @@ func main() {
 			}
 			break
 		}
-		dec.Srouce <- frame
+		dec.Input <- frame
 	}
 
 }

@@ -18,6 +18,6 @@ func (i *Image) FrameSize() int {
 	return ((*vpx.Image)(i)).VpxFrameSize()
 }
 
-func (i *Image) YuvPlaneBuffer() []byte {
+func (i *Image) YuvBuffer() []byte {
 	return ((*vpx.Image)(i)).VpxPlaneBuffer()
 }

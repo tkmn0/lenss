@@ -15,7 +15,7 @@ type VpxEncoder struct {
 	Output           chan []byte
 }
 
-func NewEncoder(codec VCodec, width int, height int, fps int, bitrate int, keyframe int) (*VpxEncoder, error) {
+func NewVpxEncoder(codec VCodec, width int, height int, fps int, bitrate int, keyframe int) (*VpxEncoder, error) {
 	enc := &VpxEncoder{
 		ctx:              vpx.NewCodecCtx(),
 		frameCount:       0,
