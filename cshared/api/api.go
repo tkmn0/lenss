@@ -21,7 +21,7 @@ func Initialize() {
 }
 
 func CreateEncoder(codec string, w int, h int, fps int, bitrate int, keyframeInterval int) uintptr {
-	enc, err := lenss.NewEncoder(lenss.VCodec(codec), w, h, bitrate, fps, keyframeInterval)
+	enc, err := lenss.NewVpxEncoder(lenss.VCodec(codec), w, h, bitrate, fps, keyframeInterval)
 	if err != nil {
 		return 0
 	}
@@ -63,7 +63,7 @@ func DecodeFrame(p unsafe.Pointer, frame []byte) {
 	if dec == nil {
 		return
 	}
-	dec.Srouce <- frame
+	dec.Input <- frame
 }
 
 func ReadEncodedData(p unsafe.Pointer) uintptr {
@@ -108,7 +108,7 @@ func handleDecoderCallback(dec *lenss.VpxDecoder, q *spp.Queue) {
 	go func() {
 		for {
 			img := <-dec.Output
-			buff := img.YuvPlaneBuffer()
+			buff := img.YuvBuffer()
 			ptr := converter.ConvertBytesToPtr(spp.PayloadTypeBytes, buff)
 			q.Enqueue(ptr)
 		}
